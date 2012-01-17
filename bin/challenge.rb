@@ -1,10 +1,11 @@
 #!/usr/bin/env ruby
 
 require 'goliath'
-require 'mobile_offer'
+require 'challenge'
 
 class Challenge < Goliath::API
   def response(env)
-    [200, {}, "ok"]
+    response = OfferQuery.new(1, 2, 3).fetch
+    [200, {}, response]
   end
 end

@@ -1,3 +1,5 @@
+require 'json'
+
 class OfferQuery
 
   attr_accessor :uid, :pub0, :page
@@ -17,7 +19,17 @@ class OfferQuery
     @page = page
   end
 
-  def fetch
-    HttpWrapper.request DEFAULT_PARAMS.merge(uid: uid, pub0: pub0, page: page)
+  def fetch(http_wrapper = HttpWrapper)
+    params = DEFAULT_PARAMS.merge(uid: uid, pub0: pub0, page: page)
+    response = http_wrapper.request params
+    if response && response.response_header.status == 200
+      received_data = JSON.parse response.body
+      if received_data["code"] == "OK"
+        received_data["offers"].map do |offer_data|
+          Offer.new offer_data["title"], offer_data["payout"], offer_data["thumbnail"]
+        end
+      end
+    end
   end
 end
+
