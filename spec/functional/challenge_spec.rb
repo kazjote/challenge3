@@ -43,9 +43,9 @@ describe Challenge do
   describe "Posting valid form" do
     context "when there are some offers" do
       before do
-        response_body = {offers: sample_offers, code: "OK"}.to_json
-        response_mock = response_mock response_body, 200
-        http_wrapper_mock = mock(:http_wrapper, :request => response_mock)
+        sp_response_body = {offers: sample_offers, code: "OK"}.to_json
+        sp_response_mock = response_mock sp_response_body, 200
+        http_wrapper_mock = mock(:http_wrapper, request: sp_response_mock)
         perform_request(http_wrapper_mock, :post) {|c| @http_client = c }
       end
 
@@ -76,9 +76,9 @@ describe Challenge do
 
     context "when there are no offers" do
       before do
-        response_body = {offers: sample_offers, code: "NO_CONTENT"}.to_json
+        response_body = {offers: [], code: "NO_CONTENT"}.to_json
         response_mock = response_mock response_body, 200
-        http_wrapper_mock = mock(:http_wrapper, :request => response_mock)
+        http_wrapper_mock = mock(:http_wrapper, request: response_mock)
         perform_request(http_wrapper_mock, :post) {|c| @http_client = c }
       end
 

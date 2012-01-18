@@ -4,7 +4,6 @@ require 'goliath'
 require 'goliath/rack/templates'
 require 'challenge'
 
-
 class Challenge < Goliath::API
   include Goliath::Rack::Templates
 

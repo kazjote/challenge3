@@ -83,7 +83,7 @@ describe OfferQuery do
       HttpWrapper.should_receive(:request).and_return response_mock
     end
 
-    it "should raise exception" do
+    it "should raise an exception" do
       lambda { subject.fetch }.should raise_exception
     end
   end
