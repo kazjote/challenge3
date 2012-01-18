@@ -43,6 +43,8 @@ class OfferQuery
       when "OK" then load_offers(received_data)
       when "NO_CONTENT" then @offers = []
       end
+    else
+      raise received_data.inspect
     end
   end
 

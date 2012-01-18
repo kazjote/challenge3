@@ -7,7 +7,7 @@ require 'challenge'
 module Helpers
   def sample_offers
     @sample_offers ||= Array.new(3) do |i| 
-      { title:     "Offer #{i} title",
+      { title:     "Offer #{i} title<blah></blah>",
         payout:     i,
         thumbnail: {"lowres" => "#{i}.jpg", "hires" => "#{i}.jpg" } }
     end

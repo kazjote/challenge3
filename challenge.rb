@@ -18,7 +18,7 @@ class Challenge < Goliath::API
       pub0 = params["pub0"]
       page = params["page"]
 
-      offer_query = OfferQuery.new uid, pub0, page, Time.now
+      offer_query = OfferQuery.new uid, pub0, page, Time.now.to_i
       offers = offer_query.fetch config[:http_wrapper]
 
       [200, {}, haml(:root, locals: {offers: offers})]

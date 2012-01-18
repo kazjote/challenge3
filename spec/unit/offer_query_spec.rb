@@ -19,7 +19,7 @@ describe OfferQuery do
       timestamp: 1326881692,
       uid: 1,
       hashkey: "80eaa12211a6ba67a51d606cbd5fd0355c09d5b2").
-      and_return response_mock "{}", 500
+      and_return response_mock "{}", 200
 
     subject.fetch
   end

@@ -43,7 +43,7 @@ describe Challenge do
         page.css(".offer").length.should == 3
       end
 
-      it "should contain offer titles" do
+      it "should contain escaped offer titles" do
         page.css(".offer .title").first.inner_text.should =~ /#{first_offer[:title]}/
       end
 
