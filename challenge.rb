@@ -9,7 +9,7 @@ class Challenge < Goliath::API
 
   use Goliath::Rack::Params
 
-  def response(env)
+  def response env
     if env["REQUEST_METHOD"] == "POST"
       http_wrapper = config[:http_wrapper]
       params = env["params"]
@@ -17,7 +17,7 @@ class Challenge < Goliath::API
       pub0 = params["pub0"]
       page = params["page"]
 
-      offer_query = OfferQuery.new uid, pub0, page, Time.now.to_i
+      offer_query = OfferQuery.new uid, pub0, page
       offers = offer_query.fetch config[:http_wrapper]
 
       [200, {}, haml(:root, locals: {offers: offers})]

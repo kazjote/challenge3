@@ -17,7 +17,7 @@ class OfferQuery
 
   API_KEY = "b07a12df7d52e6c118e5d47d3f9e60135b109a1f"
 
-  def initialize(uid, pub0, page, timestamp = Time.now.to_i)
+  def initialize uid, pub0, page, timestamp = Time.now.to_i
     @uid = uid
     @pub0 = pub0
     @page = page
@@ -64,7 +64,7 @@ class OfferQuery
 
   def params_hash
     @params_hash ||=
-      DEFAULT_PARAMS.merge(uid: uid, pub0: pub0, page: page, timestamp: timestamp)
+      DEFAULT_PARAMS.merge uid: uid, pub0: pub0, page: page, timestamp: timestamp
   end
 
   def hashkey

@@ -20,8 +20,8 @@ module Helpers
     end
 
     response_header = {"X_SPONSORPAY_RESPONSE_SIGNATURE" => signature}
-    response_header.stub(:status => status)
-    mock(:response, response: body, response_header: response_header)
+    response_header.stub :status => status
+    mock :response, response: body, response_header: response_header
   end
 end
 

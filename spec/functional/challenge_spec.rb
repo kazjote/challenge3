@@ -4,8 +4,8 @@ require File.join(File.dirname(__FILE__), '../../', 'challenge')
 describe Challenge do
   let(:err) { Proc.new { fail "API request failed" } }
 
-  def perform_request(http_wrapper_mock = nil, method = :get)
-    with_api(Challenge) do |a|
+  def perform_request http_wrapper_mock = nil, method = :get
+    with_api Challenge do |a|
       a.config[:http_wrapper] = http_wrapper_mock if http_wrapper_mock
 
       if method == :get
@@ -21,7 +21,7 @@ describe Challenge do
   describe "Accessing main page" do
     before { perform_request {|c| @http_client = c } }
 
-    let(:page) { Nokogiri::HTML(@http_client.response) }
+    let(:page) { Nokogiri::HTML @http_client.response }
 
     it "should return HTTP status Found" do
       @http_client.response_header.status.should == 200
@@ -45,7 +45,7 @@ describe Challenge do
       before do
         sp_response_body = {offers: sample_offers, code: "OK"}.to_json
         sp_response_mock = response_mock sp_response_body, 200
-        http_wrapper_mock = mock(:http_wrapper, request: sp_response_mock)
+        http_wrapper_mock = mock :http_wrapper, request: sp_response_mock
         perform_request(http_wrapper_mock, :post) {|c| @http_client = c }
       end
 
@@ -78,7 +78,7 @@ describe Challenge do
       before do
         response_body = {offers: [], code: "NO_CONTENT"}.to_json
         response_mock = response_mock response_body, 200
-        http_wrapper_mock = mock(:http_wrapper, request: response_mock)
+        http_wrapper_mock = mock :http_wrapper, request: response_mock
         perform_request(http_wrapper_mock, :post) {|c| @http_client = c }
       end
 
