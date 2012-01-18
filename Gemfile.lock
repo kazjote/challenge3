@@ -41,6 +41,7 @@ GEM
     log4r (1.1.10)
     mime-types (1.17.2)
     multi_json (1.0.4)
+    nokogiri (1.5.0)
     rack (1.4.0)
     rack-accept-media-types (0.9)
     rack-contrib (1.1.0)
@@ -69,6 +70,7 @@ DEPENDENCIES
   em-http-request!
   goliath
   haml
+  nokogiri
   rest-client
   rspec
   tilt

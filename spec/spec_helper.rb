@@ -1,5 +1,6 @@
 require 'goliath/rack'
 require 'goliath/test_helper'
+require 'nokogiri'
 
 require 'challenge'
 
@@ -11,6 +12,11 @@ module Helpers
         thumbnail: {"lowres" => "#{i}.jpg", "hires" => "#{i}.jpg" } }
     end
   end
+
+  def response_mock(body, status)
+    response_mock = mock(:response, response: body,
+      response_header: mock(:response_header, status: status))
+  end
 end
 
 RSpec.configure do |c|
@@ -18,3 +24,4 @@ RSpec.configure do |c|
     { file_path: /spec\/functional/ }
   c.include Helpers
 end
+

@@ -4,11 +4,6 @@ require 'json'
 
 describe OfferQuery do
 
-  def response_mock(body, status)
-    response_mock = mock(:response, response: body,
-      response_header: mock(:response_header, status: status))
-  end
-
   let(:timestamp) { 1326881692 }
   subject { OfferQuery.new 1, 2, 3, timestamp }
 

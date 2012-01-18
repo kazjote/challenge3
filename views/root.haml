@@ -3,12 +3,15 @@
   %head
   %body
     - if defined? offers
-      - offers.each do |offer|
-        .offer
-          .title= offer.title
-          .payout= offer.payout
-          .thumbnail
-            %img{src: offer.thumbnail["lowres"], alt: "thumbnail"}
+      - if offers.empty?
+        .no_offers No offers
+      - else
+        - offers.each do |offer|
+          .offer
+            .title= offer.title
+            .payout= offer.payout
+            .thumbnail
+              %img{src: offer.thumbnail["lowres"], alt: "thumbnail"}
     - else
       %form{method: "POST", action: "/"}
         %label{for: "uid"} User ID
