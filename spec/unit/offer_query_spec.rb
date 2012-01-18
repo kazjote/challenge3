@@ -9,9 +9,10 @@ describe OfferQuery do
       response_header: mock(:response_header, status: status))
   end
 
-  it "should pass correct params to SponsorPay during query" do
-    timestamp = 1326881692
+  let(:timestamp) { 1326881692 }
+  subject { OfferQuery.new 1, 2, 3, timestamp }
 
+  it "should pass correct params to SponsorPay during query" do
     HttpWrapper.should_receive(:request).with(
       appid: 157,
       device_id: "2b6f0cc904d137be2 e1730235f5664094b 831186",
@@ -23,9 +24,9 @@ describe OfferQuery do
       timestamp: 1326881692,
       uid: 1,
       hashkey: "80eaa12211a6ba67a51d606cbd5fd0355c09d5b2").
-      and_return response_mock "{}", "does not matter"
+      and_return response_mock "{}", 500
 
-    OfferQuery.new(1, 2, 3, timestamp).fetch
+    subject.fetch
   end
 
   context "when there are some results" do
@@ -37,12 +38,17 @@ describe OfferQuery do
       end
     end
 
-    let(:fetched_offers) { OfferQuery.new(1, 2, 3).fetch }
+    let(:fetched_offers) { subject.offers }
 
     before do
       response_body = {offers: offers_data, code: "OK"}.to_json
       response_mock = response_mock response_body, 200
       HttpWrapper.should_receive(:request).and_return response_mock
+      subject.fetch
+    end
+
+    describe "status" do
+      it { should be_found }
     end
 
     it "should return correct number of offers" do
@@ -64,6 +70,23 @@ describe OfferQuery do
         fetched_offers[0].thumbnail.should == offers_data[0][:thumbnail]
         fetched_offers[2].thumbnail.should == offers_data[2][:thumbnail]
       end
+    end
+  end
+
+  context "when there are no results" do
+    before do
+      response_body = {code: "NO_CONTENT"}.to_json
+      response_mock = response_mock response_body, 200
+      HttpWrapper.should_receive(:request).and_return response_mock
+      subject.fetch
+    end
+
+    describe "status" do
+      it { should be_found }
+    end
+
+    it "should return empty array of offers" do
+      subject.offers.should == []
     end
   end
 end

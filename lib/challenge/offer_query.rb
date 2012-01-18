@@ -30,13 +30,18 @@ class OfferQuery
     handle_response response
   end
 
+  def found?
+    @offers
+  end
+
   protected
 
   def handle_response response
     received_data = JSON.parse response.response
     if response.response_header.status == 200
-      if received_data["code"] == "OK"
-        load_offers received_data
+      case received_data["code"]
+      when "OK" then load_offers(received_data)
+      when "NO_CONTENT" then @offers = []
       end
     end
   end
