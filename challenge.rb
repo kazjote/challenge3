@@ -12,8 +12,15 @@ class Challenge < Goliath::API
 
   def response(env)
     if env["REQUEST_METHOD"] == "POST"
+      http_wrapper = config[:http_wrapper]
       params = env["params"]
-      offers = OfferQuery.new(params["uid"], params["pub0"], params["page"]).fetch
+      uid = params["uid"]
+      pub0 = params["pub0"]
+      page = params["page"]
+
+      offer_query = OfferQuery.new uid, pub0, page, Time.now
+      offers = offer_query.fetch config[:http_wrapper]
+
       [200, {}, haml(:root, locals: {offers: offers})]
     else
       [200, {}, haml(:root)]

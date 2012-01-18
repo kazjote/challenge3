@@ -24,8 +24,8 @@ class OfferQuery
     @timestamp = timestamp
   end
 
-  def fetch
-    response = HttpWrapper.request params_hash.dup.merge(:hashkey => hashkey)
+  def fetch http_wrapper = HttpWrapper
+    response = http_wrapper.request params_hash.dup.merge(:hashkey => hashkey)
 
     if response && response.response_header.status == 200
       received_data = JSON.parse response.response
