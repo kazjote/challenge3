@@ -6,6 +6,7 @@
       - if offers.empty?
         .no_offers No offers
       - else
+        %h1 Your hot offers
         - offers.each do |offer|
           .offer
             .title= offer.title
@@ -13,6 +14,8 @@
             .thumbnail
               %img{src: offer.thumbnail["lowres"], alt: "thumbnail"}
     - else
+      %h1 Check today hot offers
+
       %form{method: "POST", action: "/"}
         %label{for: "uid"} User ID
         %input#uid{name: "uid", type: "text"}
