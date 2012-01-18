@@ -6,7 +6,7 @@ require 'em-synchrony/em-http'
 class OfferQuery
   include EventMachine::HttpEncoding
 
-  attr_reader :uid, :pub0, :page, :timestamp
+  attr_reader :uid, :pub0, :page, :timestamp, :offers
 
   DEFAULT_PARAMS = {
     appid:       157,
@@ -25,19 +25,27 @@ class OfferQuery
   end
 
   def fetch http_wrapper = HttpWrapper
-    response = http_wrapper.request params_hash.dup.merge(:hashkey => hashkey)
+    final_params = params_hash.dup.merge hashkey: hashkey
+    response = http_wrapper.request final_params
+    handle_response response
+  end
 
-    if response && response.response_header.status == 200
-      received_data = JSON.parse response.response
+  protected
+
+  def handle_response response
+    received_data = JSON.parse response.response
+    if response.response_header.status == 200
       if received_data["code"] == "OK"
-        received_data["offers"].map do |offer_data|
-          Offer.new offer_data["title"], offer_data["payout"], offer_data["thumbnail"]
-        end
+        load_offers received_data
       end
     end
   end
 
-  protected
+  def load_offers data_hash
+    @offers = data_hash["offers"].map do |offer_data|
+      Offer.new offer_data["title"], offer_data["payout"], offer_data["thumbnail"]
+    end
+  end
 
   def params_hash
     @params_hash ||=

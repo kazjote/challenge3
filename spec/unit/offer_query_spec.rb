@@ -4,6 +4,11 @@ require 'json'
 
 describe OfferQuery do
 
+  def response_mock(body, status)
+    response_mock = mock(:response, response: body,
+      response_header: mock(:response_header, status: status))
+  end
+
   it "should pass correct params to SponsorPay during query" do
     timestamp = 1326881692
 
@@ -17,7 +22,8 @@ describe OfferQuery do
       pub0: 2,
       timestamp: 1326881692,
       uid: 1,
-      hashkey: "80eaa12211a6ba67a51d606cbd5fd0355c09d5b2")
+      hashkey: "80eaa12211a6ba67a51d606cbd5fd0355c09d5b2").
+      and_return response_mock "{}", "does not matter"
 
     OfferQuery.new(1, 2, 3, timestamp).fetch
   end
@@ -35,8 +41,7 @@ describe OfferQuery do
 
     before do
       response_body = {offers: offers_data, code: "OK"}.to_json
-      response_mock = mock(:response, response: response_body,
-        response_header: mock(:response_header, status: 200))
+      response_mock = response_mock response_body, 200
       HttpWrapper.should_receive(:request).and_return response_mock
     end
 
