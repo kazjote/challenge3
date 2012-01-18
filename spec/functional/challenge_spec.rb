@@ -7,6 +7,7 @@ describe Challenge do
   def perform_request(http_wrapper_mock = nil, method = :get)
     with_api(Challenge) do |a|
       a.config[:http_wrapper] = http_wrapper_mock if http_wrapper_mock
+
       if method == :get
         get_request({}, err) {|c| yield c }
       elsif method == :post
@@ -18,8 +19,24 @@ describe Challenge do
   end
 
   describe "Accessing main page" do
+    before { perform_request {|c| @http_client = c } }
+
+    let(:page) { Nokogiri::HTML(@http_client.response) }
+
     it "should return HTTP status Found" do
-      perform_request {|c| c.response_header.status.should == 200 }
+      @http_client.response_header.status.should == 200
+    end
+
+    it "should have input field for parameter uid" do
+      page.css("input[name='uid']").should_not be_empty
+    end
+
+    it "should have input field for parameter pub0" do
+      page.css("input[name='pub0']").should_not be_empty
+    end
+
+    it "should have input field for parameter page" do
+      page.css("input[name='page']").should_not be_empty
     end
   end
 
