@@ -30,18 +30,10 @@ describe OfferQuery do
   end
 
   context "when there are some results" do
-    let(:offers_data) do
-      Array.new(3) do |i| 
-        { title:     "Offer #{i} title",
-          payout:     i,
-          thumbnail: {"lowres" => "#{i}.jpg", "hires" => "#{i}.jpg" } }
-      end
-    end
-
     let(:fetched_offers) { subject.offers }
 
     before do
-      response_body = {offers: offers_data, code: "OK"}.to_json
+      response_body = {offers: sample_offers, code: "OK"}.to_json
       response_mock = response_mock response_body, 200
       HttpWrapper.should_receive(:request).and_return response_mock
       subject.fetch
@@ -57,18 +49,18 @@ describe OfferQuery do
 
     describe "fetched offers" do
       it "should have correct title" do
-        fetched_offers[0].title.should == offers_data[0][:title]
-        fetched_offers[2].title.should == offers_data[2][:title]
+        fetched_offers[0].title.should == sample_offers[0][:title]
+        fetched_offers[2].title.should == sample_offers[2][:title]
       end
 
       it "should have correct payout" do
-        fetched_offers[0].payout.should == offers_data[0][:payout]
-        fetched_offers[2].payout.should == offers_data[2][:payout]
+        fetched_offers[0].payout.should == sample_offers[0][:payout]
+        fetched_offers[2].payout.should == sample_offers[2][:payout]
       end
 
       it "should have correct thumbnail" do
-        fetched_offers[0].thumbnail.should == offers_data[0][:thumbnail]
-        fetched_offers[2].thumbnail.should == offers_data[2][:thumbnail]
+        fetched_offers[0].thumbnail.should == sample_offers[0][:thumbnail]
+        fetched_offers[2].thumbnail.should == sample_offers[2][:thumbnail]
       end
     end
   end

@@ -25,7 +25,7 @@ describe Challenge do
 
   describe "Posting valid form" do
     it "should return correct HTTP status" do
-      response_body = {offers: [], code: "OK"}.to_json
+      response_body = {offers: sample_offers, code: "OK"}.to_json
       response_mock = mock(:response, response: response_body,
         response_header: mock(:response_header, status: 200))
       http_wrapper_mock = mock(:http_wrapper)
