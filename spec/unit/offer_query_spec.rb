@@ -76,5 +76,16 @@ describe OfferQuery do
       subject.offers.should == []
     end
   end
+
+  context "when response signature is incorrect" do
+    before do
+      response_mock = response_mock "{}", 200, "invalid signature"
+      HttpWrapper.should_receive(:request).and_return response_mock
+    end
+
+    it "should raise exception" do
+      lambda { subject.fetch }.should raise_exception
+    end
+  end
 end
 

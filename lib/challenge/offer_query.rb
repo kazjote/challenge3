@@ -27,6 +27,7 @@ class OfferQuery
   def fetch http_wrapper = HttpWrapper
     final_params = params_hash.dup.merge hashkey: hashkey
     response = http_wrapper.request final_params
+    raise "Invalid signature" unless check_signature response
     handle_response response
   end
 
@@ -35,6 +36,13 @@ class OfferQuery
   end
 
   protected
+
+  def check_signature response
+    signature = response.response_header["X_SPONSORPAY_RESPONSE_SIGNATURE"]
+
+    expected_signature = Digest::SHA1.hexdigest "#{response.response}#{API_KEY}"
+    signature == expected_signature
+  end
 
   def handle_response response
     received_data = JSON.parse response.response

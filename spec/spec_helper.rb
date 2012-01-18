@@ -13,9 +13,16 @@ module Helpers
     end
   end
 
-  def response_mock(body, status)
+  def response_mock(body, status, signature = nil)
+    unless signature
+      to_be_hashed = body + OfferQuery::API_KEY
+      signature = Digest::SHA1.hexdigest to_be_hashed
+    end
+
+    response_header = {"X_SPONSORPAY_RESPONSE_SIGNATURE" => signature}
+    response_header.stub(:status => status)
     response_mock = mock(:response, response: body,
-      response_header: mock(:response_header, status: status))
+      response_header: response_header)
   end
 end
 
