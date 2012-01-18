@@ -4,49 +4,22 @@ require 'json'
 
 describe OfferQuery do
 
-  module HttpMock
-    def self.set_response new_response
-      @@response = new_response
-    end
+  it "should pass correct params to SponsorPay during query" do
+    timestamp = 1326881692
 
-    def self.request_params
-      @@request_params
-    end
+    HttpWrapper.should_receive(:request).with(
+      appid: 157,
+      device_id: "2b6f0cc904d137be2 e1730235f5664094b 831186",
+      ip: "109.235.143.113",
+      locale: "de",
+      offer_types: "112",
+      page: 3,
+      pub0: 2,
+      timestamp: 1326881692,
+      uid: 1,
+      hashkey: "80eaa12211a6ba67a51d606cbd5fd0355c09d5b2")
 
-    def self.reset
-      @@request_params = nil
-      @@response = nil
-    end
-
-    def self.request(params)
-      @@request_params = params
-      @@response
-    end
-  end
-
-  class ResponseMock < Struct.new(:code, :body)
-    ResponseHeaderMock = Struct.new(:status)
-
-    def response_header
-      ResponseHeaderMock.new code
-    end
-  end
-
-  before(:each) { HttpMock.reset }
-
-  describe "params passed to SponsorPay during query" do
-    before { OfferQuery.new(1, 2, 3).fetch HttpMock }
-
-    let(:params) { HttpMock.request_params }
-
-    specify { params[:uid].should == 1 }
-    specify { params[:pub0].should == 2 }
-    specify { params[:page].should == 3 }
-    specify { params[:appid].should == 157 }
-    specify { params[:locale].should == "de" }
-    specify { params[:ip].should == "109.235.143.113" }
-    specify { params[:offer_types].should == "112" }
-    specify { params[:device_id].should == "2b6f0cc904d137be2 e1730235f5664094b 831186" }
+    OfferQuery.new(1, 2, 3, timestamp).fetch
   end
 
   context "when there are some results" do
@@ -58,11 +31,13 @@ describe OfferQuery do
       end
     end
 
-    let(:fetched_offers) { OfferQuery.new(1, 2, 3).fetch HttpMock }
+    let(:fetched_offers) { OfferQuery.new(1, 2, 3).fetch }
 
     before do
       response_body = {offers: offers_data, code: "OK"}.to_json
-      HttpMock.set_response ResponseMock.new 200, response_body
+      response_mock = mock(:response, body: response_body,
+        response_header: mock(:response_header, status: 200))
+      HttpWrapper.should_receive(:request).and_return response_mock
     end
 
     it "should return correct number of offers" do
