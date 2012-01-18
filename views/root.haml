@@ -1,0 +1,24 @@
+!!! HTML
+%html
+  %head
+  %body
+    - if defined? offers
+      - offers.each do |offer|
+        .offer
+          .title= offer.title
+          .payout= offer.payout
+          .thumbnail
+            %img{src: offer.thumbnail["lowres"], alt: "thumbnail"}
+    - else
+      %form{method: "POST", action: "/"}
+        %label{for: "uid"} User ID
+        %input#uid{name: "uid", type: "text"}
+
+        %label{for: "pub0"} Your parameter
+        %input#pub0{name: "pub0", type: "text"}
+
+        %label{for: "page"} Page number
+        %input#page{name: "page", type: "text"}
+
+        %input{type: "submit"}
+

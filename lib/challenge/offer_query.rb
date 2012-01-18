@@ -1,6 +1,8 @@
 require 'json'
 require 'digest/sha1'
 
+require 'em-synchrony/em-http'
+
 class OfferQuery
   include EventMachine::HttpEncoding
 
@@ -26,7 +28,7 @@ class OfferQuery
     response = HttpWrapper.request params_hash.dup.merge(:hashkey => hashkey)
 
     if response && response.response_header.status == 200
-      received_data = JSON.parse response.body
+      received_data = JSON.parse response.response
       if received_data["code"] == "OK"
         received_data["offers"].map do |offer_data|
           Offer.new offer_data["title"], offer_data["payout"], offer_data["thumbnail"]

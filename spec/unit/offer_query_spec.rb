@@ -35,7 +35,7 @@ describe OfferQuery do
 
     before do
       response_body = {offers: offers_data, code: "OK"}.to_json
-      response_mock = mock(:response, body: response_body,
+      response_mock = mock(:response, response: response_body,
         response_header: mock(:response_header, status: 200))
       HttpWrapper.should_receive(:request).and_return response_mock
     end
